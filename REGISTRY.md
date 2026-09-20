@@ -20,4 +20,4 @@ Shop `POST /api/sale` body:
 
 Single SKU — no standard/plus variants. Amount from shop config only.
 
-Shop draft **GoldenGooseTools#40** added `chat-to-pdf` to the desk allowlist + registry (`live: false`). This app still **refuses checkout** until `NEXT_PUBLIC_SHOP_SALE_PRODUCTS` includes `chat-to-pdf` (mirrors desk). No fallthrough to `seo-audit` / `accessibility`.
+**GoldenGooseTools#43** restored `chat-to-pdf` on main `SALE_PRODUCT_IDS`. Default `NEXT_PUBLIC_SHOP_SALE_PRODUCTS` includes `chat-to-pdf` so paid checkout is live when shop origin is configured. Catalogue `live` stays **false** until Brandon lists. Override env to omit `chat-to-pdf` if you need to force `sku_not_live`.
