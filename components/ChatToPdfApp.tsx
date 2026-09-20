@@ -67,6 +67,7 @@ export function ChatToPdfApp() {
               ? "Local unlock (dev only)."
               : "Payment verified by the shop desk. Clean PDF export is unlocked for this browser session.",
           );
+          // Rebuild from in-memory / session draft — no re-upload.
           const draft = restoreDraft();
           if (draft) {
             setRaw(draft);
