@@ -6,6 +6,7 @@ export const TOOL_NAME = "Chat to PDF";
 /** Slate blue — Cos accent for this tool. */
 export const ACCENT = "#6f86a6";
 
+/** Catalogue listing — stays false until Brandon/Cos list after stranger-smoke. */
 export const LIVE = false;
 
 /** Free path converts at most this many messages (watermarked). */
@@ -15,6 +16,13 @@ export const FREE_MESSAGE_CAP = 20;
 export const PAID_MESSAGE_MAX = 500;
 
 export const FREE_WATERMARK = "Golden Goose Tools — free preview";
+
+/**
+ * Default mirrors shop SALE_PRODUCT_IDS after GoldenGooseTools#43.
+ * Override with NEXT_PUBLIC_SHOP_SALE_PRODUCTS; omit chat-to-pdf to force sku_not_live.
+ */
+export const DEFAULT_SHOP_SALE_PRODUCTS =
+  "seo-audit,accessibility,fix-it,a11y-statement,quote-invoice,chat-to-pdf,cottage-food-labels,maker-label-pack,listing-optimizer,domain-ssl-report";
 
 const DRAFT_STORAGE_KEY = "ggt-chat-to-pdf-draft";
 
@@ -42,12 +50,12 @@ export function shopOrigin(env: Env = publicEnv()): string | null {
 
 /**
  * Products the shop sale desk currently accepts.
- * Default (when unset): seo-audit|accessibility only. Until `chat-to-pdf` appears,
- * checkout must refuse — never fall through (would be priced as SEO).
+ * Default mirrors main SALE_PRODUCT_IDS (includes chat-to-pdf after #43).
+ * Still refuse if env omit chat-to-pdf — never fall through to SEO pricing.
  */
 export function shopSaleProducts(env: Env = publicEnv()): Set<string> {
   const raw = env.NEXT_PUBLIC_SHOP_SALE_PRODUCTS?.trim();
-  const list = (raw && raw.length > 0 ? raw : "seo-audit,accessibility")
+  const list = (raw && raw.length > 0 ? raw : DEFAULT_SHOP_SALE_PRODUCTS)
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
