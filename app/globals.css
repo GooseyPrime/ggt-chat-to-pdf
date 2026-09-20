@@ -1,0 +1,111 @@
+@import "ggt-design-kit/src/index.css";
+
+:root {
+  /* Slate blue — Chat to PDF accent */
+  --ggt-accent: #6f86a6;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+.ctp-field {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  max-width: 720px;
+}
+
+.ctp-label {
+  color: var(--ggt-mist);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ctp-textarea {
+  min-height: 220px;
+  padding: 14px 16px;
+  border: 1px solid var(--ggt-hairline);
+  border-radius: var(--ggt-radius-md, 8px);
+  background: var(--ggt-ink);
+  color: var(--ggt-paper);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.ctp-textarea:focus-visible {
+  outline: 2px solid var(--ggt-accent);
+  outline-offset: 2px;
+}
+
+.ctp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.ctp-error {
+  margin-top: 12px;
+  color: #e8a090;
+  font-size: 0.95rem;
+}
+
+.ctp-note {
+  margin-top: 10px;
+  color: var(--ggt-mist);
+  font-size: 0.95rem;
+}
+
+.ctp-preview {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 240px;
+  overflow: auto;
+}
+
+.ctp-preview li {
+  padding: 8px 0;
+  border-top: 1px solid var(--ggt-hairline);
+  font-size: 0.92rem;
+}
+
+.ctp-preview li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ctp-role {
+  color: var(--ggt-accent);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ctp-snippet {
+  display: block;
+  margin-top: 4px;
+  color: var(--ggt-mist);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ctp-unlocked {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--ggt-accent) 45%, var(--ggt-hairline));
+  border-radius: var(--ggt-radius-lg, 12px);
+  background: var(--ggt-ink);
+}
+
+.ctp-unlocked h2 {
+  margin: 0 0 8px;
+}

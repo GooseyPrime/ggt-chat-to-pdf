@@ -1,0 +1,31 @@
+{
+  "name": "ggt-chat-to-pdf",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Golden Goose Tools — Chat to PDF. Paste a transcript, download a PDF in-browser. Free preview watermarked (20 messages); paid clean export via shop sale desk. Accent Slate blue.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "ggt-design-kit": "github:GooseyPrime/ggt-design-kit",
+    "jspdf": "^4.2.1",
+    "next": "^15.5.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.6",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
