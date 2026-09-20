@@ -85,7 +85,9 @@ function parseRoleLines(text: string): { messages: ChatMessage[]; totalCount: nu
   if (current) messages.push(finalize(current));
 
   // Need at least 2 role hits (or 1 solid message) to prefer this mode over alternating.
-  if (hits === 0) return { messages: [], totalCount: 0 };
+  const oneSolidMessage =
+    hits === 1 && messages.length === 1 && Boolean(messages[0]?.content.trim());
+  if (hits < 2 && !oneSolidMessage) return { messages: [], totalCount: 0 };
   return { messages, totalCount: messages.length };
 }
 

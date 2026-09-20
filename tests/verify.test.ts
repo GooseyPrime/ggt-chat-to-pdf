@@ -28,6 +28,21 @@ describe("normalizeVerify", () => {
     expect(result.ok).toBe(false);
   });
 
+  it("does not unlock when ok is false even if paid is true", () => {
+    const result = normalizeVerify({ ok: false, paid: true }, "sess_not_ok_paid");
+    expect(result.paid).toBe(false);
+    expect(result.ok).toBe(false);
+  });
+
+  it("does not unlock promo status when ok is false", () => {
+    const result = normalizeVerify(
+      { ok: false, paymentStatus: "no_payment_required" },
+      "sess_not_ok_promo",
+    );
+    expect(result.paid).toBe(false);
+    expect(result.ok).toBe(false);
+  });
+
   it("accepts snake_case payment_status", () => {
     const result = normalizeVerify(
       { ok: true, payment_status: "no_payment_required" },

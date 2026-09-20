@@ -203,10 +203,10 @@ export function normalizeVerify(
   const paidFlag = data.paid === true;
   const zeroPromo = paymentStatus === "no_payment_required";
   const okFlag = data.ok === true;
-  const paid = (okFlag && paidFlag) || (okFlag && zeroPromo) || paidFlag || zeroPromo;
+  const paid = okFlag && (paidFlag || zeroPromo);
 
   return {
-    ok: okFlag || paid,
+    ok: paid,
     paid,
     kind: asString(data.kind),
     message: asString(data.message),

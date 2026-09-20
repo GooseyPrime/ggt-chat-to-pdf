@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/chat-to-pdf-scaffold
+          ref: ${{ github.ref_name }}
       - name: Assemble package-lock.json
         run: |
           python3 - <<'PY'
@@ -24,7 +24,6 @@ jobs:
           raw = gzip.decompress(base64.b64decode(b64))
           pathlib.Path("package-lock.json").write_bytes(raw)
           print("wrote", len(raw), "bytes")
-          assert len(raw) == 87665, len(raw)
           PY
       - name: Commit and push
         run: |
@@ -33,4 +32,4 @@ jobs:
           git add package-lock.json
           if git diff --cached --quiet; then echo "no change"; exit 0; fi
           git commit -m "chore: assemble package-lock.json for npm ci"
-          git push origin HEAD:feat/chat-to-pdf-scaffold
+          git push origin HEAD:${{ github.ref_name }}

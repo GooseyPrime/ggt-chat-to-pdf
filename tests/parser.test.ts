@@ -61,6 +61,19 @@ describe("parseTranscript", () => {
     expect(result.messages[0]?.meta).toBe("2024-01-01 12:00");
     expect(result.messages[0]?.role).toBe("User");
   });
+
+  it("does not force roles mode for a single non-solid role hit", () => {
+    const result = parseTranscript("User:");
+    expect(result.mode).toBe("alternating");
+    expect(result.messages[0]?.role).toBe("Message 1");
+  });
+
+  it("still allows one solid role message", () => {
+    const result = parseTranscript("User: Hello");
+    expect(result.mode).toBe("roles");
+    expect(result.totalCount).toBe(1);
+    expect(result.messages[0]?.role).toBe("User");
+  });
 });
 
 describe("20-message free cap", () => {
