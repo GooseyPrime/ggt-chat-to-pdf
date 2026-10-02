@@ -203,7 +203,8 @@ export function normalizeVerify(
   const paidFlag = data.paid === true;
   const zeroPromo = paymentStatus === "no_payment_required";
   const okFlag = data.ok === true;
-  const paid = okFlag && (paidFlag || zeroPromo);
+  // The shop confirms any paid session; only a session bought for THIS product may unlock it.
+  const paid = okFlag && (paidFlag || zeroPromo) && asString(data.product) === TOOL_ID;
 
   return {
     ok: paid,
