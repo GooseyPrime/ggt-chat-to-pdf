@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   title: "Golden Goose Tools — Chat to PDF",
   description:
     "Paste a chat transcript and download a PDF in your browser. Free preview is watermarked (first 20 messages). Nothing is uploaded for the free pass.",
+  icons: { icon: "https://www.goldengoosetools.com/images/GoldenGooseToolsnb.png" },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

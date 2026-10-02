@@ -3,7 +3,7 @@ import { normalizeVerify } from "@/lib/payments";
 
 describe("normalizeVerify", () => {
   it("unlocks when ok && paid", () => {
-    const result = normalizeVerify({ ok: true, paid: true }, "sess_1");
+    const result = normalizeVerify({ ok: true, paid: true, product: "chat-to-pdf" }, "sess_1");
     expect(result.ok).toBe(true);
     expect(result.paid).toBe(true);
     expect(result.sessionId).toBe("sess_1");
@@ -11,7 +11,7 @@ describe("normalizeVerify", () => {
 
   it("unlocks on paymentStatus no_payment_required", () => {
     const result = normalizeVerify(
-      { ok: true, paid: false, paymentStatus: "no_payment_required" },
+      { ok: true, paid: false, paymentStatus: "no_payment_required", product: "chat-to-pdf" },
       "sess_promo",
     );
     expect(result.paid).toBe(true);
@@ -45,9 +45,15 @@ describe("normalizeVerify", () => {
 
   it("accepts snake_case payment_status", () => {
     const result = normalizeVerify(
-      { ok: true, payment_status: "no_payment_required" },
+      { ok: true, payment_status: "no_payment_required", product: "chat-to-pdf" },
       "sess_snake",
     );
     expect(result.paid).toBe(true);
+  });
+
+  it("does not unlock a paid session bought for another product", () => {
+    const result = normalizeVerify({ ok: true, paid: true, product: "seo-audit" }, "sess_other");
+    expect(result.paid).toBe(false);
+    expect(result.ok).toBe(false);
   });
 });

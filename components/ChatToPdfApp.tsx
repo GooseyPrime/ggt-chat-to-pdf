@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ACCENT,
   FREE_MESSAGE_CAP,
-  LIVE,
   TOOL_ID,
   TOOL_NAME,
   TOOL_PATH,
@@ -65,7 +64,7 @@ export function ChatToPdfApp() {
           setUnlockNote(
             result.kind === "local_unlock"
               ? "Local unlock (dev only)."
-              : "Payment verified by the shop desk. Clean PDF export is unlocked for this browser session.",
+              : "Payment confirmed. Clean PDF export is unlocked on this page — download your PDF before you close the tab.",
           );
           // Rebuild from in-memory / session draft — no re-upload.
           const draft = restoreDraft();
@@ -258,7 +257,7 @@ export function ChatToPdfApp() {
                 : null}
             </p>
 
-            <ul className="ctp-preview" aria-label="Message preview">
+            <ul className="ctp-preview" aria-label="Message preview" tabIndex={0}>
               {previewSlice.map((m, i) => (
                 <li key={`${m.role}-${i}`}>
                   <span className="ctp-role">
@@ -306,21 +305,19 @@ export function ChatToPdfApp() {
                 <p className="ggt-price">{priceLabel}</p>
               ) : (
                 <p className="ctp-note">
-                  Price comes from the shop config when the {TOOL_ID} SKU is live. This tool
-                  never invents a dollar amount.
+                  Price is shown at checkout.
                 </p>
               )}
               <p className="ctp-note">
                 Removes the watermark and exports the full transcript (reasonable safety cap
-                applies). Checkout goes through the Golden Goose Tools shop sale desk — no
-                Stripe keys in this app.
+                applies). You pay on Golden Goose Tools checkout (Stripe); this page never
+                sees your card.
               </p>
 
               {!saleLive ? (
                 <p className="ctp-note" role="status">
-                  Checkout is not live yet for Chat to PDF on the shop sale desk. Until the
-                  shop allowlist includes <code>{TOOL_ID}</code>, we refuse checkout so you
-                  are not billed as SEO Audit. The free watermarked preview still works.
+                  Checkout is not open for Chat to PDF yet. The free watermarked preview still
+                  works.
                 </p>
               ) : null}
 
@@ -332,8 +329,8 @@ export function ChatToPdfApp() {
                   onClick={() => void onBuy()}
                   title={
                     saleLive
-                      ? "Checkout via shop sale desk"
-                      : "Checkout disabled until chat-to-pdf is on the shop allowlist"
+                      ? "Checkout on Golden Goose Tools"
+                      : "Checkout is not open yet"
                   }
                 >
                   {paying
@@ -350,8 +347,7 @@ export function ChatToPdfApp() {
         ) : null}
 
         <p className="ggt-trust">
-          Free pass: in-browser only · no transcript upload · draft PRs · Brandon merges ·
-          live={String(LIVE)}
+          Free pass: in-browser only · no transcript upload.
         </p>
       </div>
     </main>
