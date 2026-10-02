@@ -45,12 +45,12 @@ export function shopOrigin(env: Env = publicEnv()): string | null {
 
 /**
  * Products the shop sale desk accepts (mirrors SALE_PRODUCT_IDS in the shop).
- * Override with NEXT_PUBLIC_SHOP_SALE_PRODUCTS; if it omits `chat-to-pdf`,
- * checkout refuses rather than falling through to another product's price.
+ * Override with NEXT_PUBLIC_SHOP_SALE_PRODUCTS; an empty value disables all products.
+ * If it omits `chat-to-pdf`, checkout refuses rather than falling through to another product's price.
  */
 export function shopSaleProducts(env: Env = publicEnv()): Set<string> {
-  const raw = env.NEXT_PUBLIC_SHOP_SALE_PRODUCTS?.trim();
-  const list = (raw && raw.length > 0 ? raw : DEFAULT_SALE_PRODUCTS)
+  const raw = env.NEXT_PUBLIC_SHOP_SALE_PRODUCTS;
+  const list = (raw === undefined ? DEFAULT_SALE_PRODUCTS : raw.trim())
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
