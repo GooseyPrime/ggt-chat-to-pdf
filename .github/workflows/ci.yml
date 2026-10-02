@@ -18,4 +18,34 @@ jobs:
       - run: npm install
       - run: npm run typecheck
       - run: npm test
+      # `prebuild` also packages the extension zips into dist/ and public/downloads/
       - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chat-to-pdf-extension-zips
+          path: |
+            dist/chat-to-pdf-*.zip
+            dist/SHA256SUMS
+
+  # Real-Chromium end-to-end run against saved HTML fixtures (no live sites are contacted).
+  # Not a required check: browser installs on hosted runners are the flaky part.
+  e2e:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install
+      - run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - run: npx playwright-core install --with-deps chromium
+      - run: node scripts/build-extension.mjs --target test --no-public
+      - run: node scripts/e2e.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chat-to-pdf-e2e
+          path: test-results/e2e

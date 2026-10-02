@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat to PDF</title>
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body class="popup">
+  <header>
+    <img src="icons/icon-48.png" alt="" width="28" height="28">
+    <h1>Chat to PDF</h1>
+  </header>
+
+  <main id="app" class="stack" aria-live="polite">
+    <p class="muted" id="loading">Looking at this tab…</p>
+
+    <section id="unsupported" class="hidden stack">
+      <div class="note warn">This tab isn't a supported chat site.</div>
+      <p class="muted">Open a conversation on one of these, then click the icon again:</p>
+      <ul class="sites">
+        <li>ChatGPT — chatgpt.com</li>
+        <li>Google Gemini — gemini.google.com</li>
+        <li>Microsoft Copilot — copilot.microsoft.com</li>
+        <li>Claude — claude.ai</li>
+      </ul>
+    </section>
+
+    <section id="supported" class="hidden stack">
+      <dl class="meta">
+        <dt>Chat</dt><dd id="m-title"></dd>
+        <dt>Site</dt><dd id="m-site"></dd>
+        <dt id="m-model-label">Model</dt><dd id="m-model"></dd>
+        <dt>Messages on screen</dt><dd id="m-count"></dd>
+      </dl>
+      <label class="check"><input type="checkbox" id="load-all" checked>
+        <span>Load the whole conversation first (scrolls this page to fetch older messages)</span></label>
+      <div class="row">
+        <button class="btn" id="go-all" type="button">Export whole chat</button>
+        <button class="btn secondary" id="go-pick" type="button">Choose messages…</button>
+      </div>
+      <p class="muted" style="font-size:12px">Everything is processed in your browser. Nothing is uploaded.</p>
+    </section>
+
+    <section id="working" class="hidden stack">
+      <div class="progress" role="progressbar" aria-label="Reading conversation"><span></span></div>
+      <p id="work-text">Reading the conversation…</p>
+      <button class="btn secondary" id="cancel" type="button">Cancel</button>
+    </section>
+
+    <div id="error" class="note bad hidden" role="alert"></div>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

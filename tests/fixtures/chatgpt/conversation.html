@@ -1,0 +1,73 @@
+<!doctype html>
+<!--
+  Synthetic fixture modelled on the structure of a real ChatGPT page (see docs/UPDATING-SELECTORS.md).
+  Content is invented for tests; no real conversation text is stored here.
+-->
+<html lang="en">
+<head><title>Sorting algorithms explained</title></head>
+<body>
+<nav><a aria-current="page" href="/c/abc"><span class="truncate">Sorting algorithms explained</span></a></nav>
+<main>
+<div class="flex flex-col text-sm threadScrollVars">
+  <section class="w-full" dir="auto" data-turn-id="t1" data-testid="conversation-turn-1" data-turn="user">
+    <h4 class="sr-only select-none">You said:</h4>
+    <div class="text-base">
+      <div class="text-message relative flex w-full flex-col" data-message-author-role="user" data-message-id="m-user-1" dir="auto">
+        <div class="flex w-full flex-col gap-1 empty:hidden">
+          <div class="flex w-fit flex-col items-start self-end">
+            <img alt="Uploaded image" src="blob:https://chatgpt.com/0000">
+            <div class="whitespace-pre-wrap">Explain quicksort and show me a version in Python.
+Here is my attempt:
+```python
+def qs(a):
+    return a
+```
+It uses `a` as input.</div>
+          </div>
+        </div>
+      </div>
+      <div class="z-0 flex justify-end"><div role="group" aria-label="Your message actions"><button type="button" aria-label="Copy message" data-testid="copy-turn-action-button">Copy</button></div></div>
+    </div>
+  </section>
+  <section class="w-full" dir="auto" data-turn-id="t2" data-testid="conversation-turn-2" data-turn="assistant">
+    <h4 class="sr-only select-none">ChatGPT said:</h4>
+    <div class="text-base">
+      <div class="text-message relative flex w-full flex-col" data-message-author-role="assistant" data-message-id="m-asst-1" data-message-model-slug="gpt-4o" dir="auto">
+        <div class="flex w-full flex-col gap-1 empty:hidden">
+          <div class="markdown prose wrap-break-word w-full">
+            <h2 data-start="0">Quicksort in a nutshell</h2>
+            <p>Quicksort picks a <strong>pivot</strong>, partitions the list, and <em>recurses</em>. See <a href="https://en.wikipedia.org/wiki/Quicksort" target="_blank" rel="noopener">the overview</a> for details.</p>
+            <ul>
+              <li>Average time: <code>O(n log n)</code></li>
+              <li>Worst case:
+                <ul><li>Already sorted input with a bad pivot</li><li>All keys equal</li></ul>
+              </li>
+            </ul>
+            <ol start="3"><li>Third step</li><li>Fourth step</li></ol>
+            <pre class="overflow-visible!"><div class="contain-inline-size rounded-2xl bg-token-sidebar-surface-primary"><div class="flex items-center text-token-text-secondary px-4 py-2 text-xs font-sans">python</div><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><button class="flex gap-1" aria-label="Copy">Copy code</button></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">quicksort</span>(<span class="hljs-params">items</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(items) &lt;= <span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> items
+    pivot, *rest = items
+    <span class="hljs-keyword">return</span> quicksort([x <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> rest <span class="hljs-keyword">if</span> x &lt; pivot]) + [pivot] + quicksort([x <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> rest <span class="hljs-keyword">if</span> x &gt;= pivot])
+</code></div></div></pre>
+            <div class="overflow-x-auto"><table data-start="10"><thead><tr><th>Algorithm</th><th style="text-align:right">Average</th><th>Stable?</th></tr></thead><tbody><tr><td>Quicksort</td><td style="text-align:right">O(n log n)</td><td>No</td></tr><tr><td>Merge sort</td><td style="text-align:right">O(n log n)</td><td>Yes</td></tr></tbody></table></div>
+            <p>The expected cost is <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">T(n) = 2T(n/2) + n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base">T(n)=2T(n/2)+n</span></span></span>, which solves to:</p>
+            <span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T(n) = \Theta(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true">T(n)=Θ(n log n)</span></span></span>
+            <blockquote><p>Pick the pivot randomly to avoid the worst case.</p></blockquote>
+            <p><img alt="Recursion tree diagram" src="https://example.invalid/tree.png"></p>
+            <hr>
+            <p>Want a Rust version too?</p>
+          </div>
+        </div>
+      </div>
+      <div class="z-0 flex justify-start"><div role="group" aria-label="Response actions"><button type="button" aria-label="Copy response" data-testid="copy-turn-action-button">Copy</button></div></div>
+    </div>
+  </section>
+  <section class="w-full" data-turn-id="t3" data-testid="conversation-turn-3" data-turn="user">
+    <h4 class="sr-only select-none">You said:</h4>
+    <div data-message-author-role="user" data-message-id="m-user-2"><div class="whitespace-pre-wrap">Yes please.</div></div>
+  </section>
+</div>
+</main>
+</body>
+</html>

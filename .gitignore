@@ -7,3 +7,8 @@ out
 *.log
 .DS_Store
 coverage
+dist
+public/downloads
+test-results
+next-env.d.ts
+*.tsbuildinfo

@@ -3,24 +3,33 @@ export const TOOL_ID = "chat-to-pdf";
 export const TOOL_SLUG = "chat-to-pdf";
 export const TOOL_PATH = "/tools/chat-to-pdf";
 export const TOOL_NAME = "Chat to PDF";
-/** Slate blue — Cos accent for this tool. */
-export const ACCENT = "#6f86a6";
+/** Page theme id from ggt-design-kit (Iris). */
+export const THEME = "iris";
 
 export const LIVE = false;
 
-/** Free path converts at most this many messages (watermarked). */
+/** Free tier: watermarked PDFs of at most this many messages (mirrors extension/src/constants.ts; tested). */
 export const FREE_MESSAGE_CAP = 20;
-
-/** Paid unlock still caps for safety (no watermark). */
-export const PAID_MESSAGE_MAX = 500;
 
 export const FREE_WATERMARK = "Golden Goose Tools — free preview";
 
-const DRAFT_STORAGE_KEY = "ggt-chat-to-pdf-draft";
+/**
+ * Store listings. Leave null until a listing is live — the install page then shows a
+ * "coming soon" placeholder instead of a link.
+ */
+export const STORE_LINKS: { chrome: string | null; edge: string | null; firefox: string | null } = {
+  chrome: null,
+  edge: null,
+  firefox: null,
+};
 
-export function draftStorageKey(): string {
-  return DRAFT_STORAGE_KEY;
-}
+/** Supported chat sites (mirrors extension/src/parsers; tested). */
+export const SUPPORTED_SITES = [
+  { id: "chatgpt", name: "ChatGPT", host: "chatgpt.com" },
+  { id: "gemini", name: "Google Gemini", host: "gemini.google.com" },
+  { id: "copilot", name: "Microsoft Copilot", host: "copilot.microsoft.com" },
+  { id: "claude", name: "Claude", host: "claude.ai" },
+] as const;
 
 const DEFAULT_SALE_PRODUCTS =
   "seo-audit,accessibility,fix-it,a11y-statement,quote-invoice,chat-to-pdf,cottage-food-labels,maker-label-pack,listing-optimizer,domain-ssl-report";

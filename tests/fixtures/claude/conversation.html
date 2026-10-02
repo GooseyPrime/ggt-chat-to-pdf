@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- Synthetic fixture modelled on the structure of a real claude.ai page; invented content. -->
+<html lang="en">
+<head><title>Refactoring a config loader - Claude</title></head>
+<body>
+<header><button data-testid="chat-title-button"><span class="truncate">Refactoring a config loader</span></button><button data-testid="model-selector-dropdown">Claude Sonnet 4.5</button></header>
+<main>
+<div data-testid="transcript-list" class="mx-auto flex w-full max-w-3xl flex-col">
+  <div data-test-render-count="1"><div class="group/message-row">
+    <div data-cds="UserMessage"><div data-testid="user-message" class="grid grid-cols-1 gap-2">
+      <p class="whitespace-pre-wrap break-words" dir="ltr">Can you tidy up this loader? It reads <code class="bg-text-200/5 border">config.json</code> twice.
+Keep the public API the same.</p>
+    </div></div>
+    <div data-testid="file-thumbnail"><img alt="screenshot.png" src="blob:https://claude.ai/1"><span>screenshot.png</span></div>
+  </div></div>
+  <div data-test-render-count="1"><div class="group/message-row">
+    <div data-testid="assistant-message" data-is-streaming="false">
+      <div class="font-claude-response relative leading-[1.65rem]">
+        <div data-testid="thinking-block"><button>Thought process</button><div>internal reasoning that must not be exported</div></div>
+        <div class="prose" data-cds="Prose"><div class="standard-markdown grid-cols-1 grid whitespace-normal">
+          <p dir="ltr">Sure — two changes: <strong>cache the parsed file</strong> and <em>validate once</em>. Docs: <a href="https://nodejs.org/api/fs.html">fs module</a>.</p>
+          <div class="relative group/copy bg-bg-000/50 border-0.5 border-border-400 rounded-lg">
+            <div class="text-text-500 font-small p-3.5 pb-0">typescript</div>
+            <div class="pointer-events-none sticky"><button>Copy</button></div>
+            <div><pre class="code-block__code"><code class="language-typescript">let cache: Config | undefined;
+export function loadConfig(path = "config.json"): Config {
+  cache ??= JSON.parse(readFileSync(path, "utf8"));
+  return cache!;
+}</code></pre></div>
+          </div>
+          <ol dir="ltr"><li>Run the tests</li><li>Check the diff</li></ol>
+          <table><thead><tr><th>Before</th><th>After</th></tr></thead><tbody><tr><td>2 reads</td><td>1 read</td></tr></tbody></table>
+          <div class="artifact-block-cell"><div>Config loader</div><div>Code · TypeScript</div></div>
+          <p dir="ltr">Inline math works too: <span class="katex"><span class="katex-mathml"><math><semantics><mrow></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true">O(1)</span></span>.</p>
+        </div></div>
+      </div>
+      <div data-testid="message-actions"><button>Retry</button></div>
+    </div>
+  </div></div>
+</div>
+</main>
+</body>
+</html>

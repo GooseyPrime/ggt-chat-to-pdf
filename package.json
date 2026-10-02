@@ -1,27 +1,36 @@
 {
   "name": "ggt-chat-to-pdf",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Golden Goose Tools — Chat to PDF. Paste a transcript, download a PDF in-browser. Free preview watermarked (20 messages); paid clean export via shop sale desk. Accent Slate blue.",
+  "description": "Golden Goose Tools \u2014 Chat to PDF. A browser extension (Chrome/Edge/Firefox) that exports ChatGPT, Gemini, Copilot and Claude conversations to nicely formatted PDFs, processed locally. Free tier is watermarked; the clean tier unlocks via the shop checkout. This repo also serves the /tools/chat-to-pdf install page.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build:extension": "node scripts/build-extension.mjs",
+    "prebuild": "node scripts/build-extension.mjs",
+    "test:e2e": "node scripts/e2e.mjs"
   },
   "dependencies": {
-    "ggt-design-kit": "github:GooseyPrime/ggt-design-kit",
+    "ggt-design-kit": "github:GooseyPrime/ggt-design-kit#f69b388c00bfa8872a951aa683c51c14f8933ef8",
     "jspdf": "^4.2.1",
     "next": "^15.5.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@types/chrome": "^0.3.4",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^22.18.6",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
+    "dejavu-fonts-ttf": "^2.37.3",
+    "esbuild": "^0.25.12",
+    "jsdom": "^26.1.0",
+    "playwright-core": "^1.63.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },

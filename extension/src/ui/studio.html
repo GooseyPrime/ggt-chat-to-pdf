@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat to PDF — export</title>
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body class="studio">
+  <div class="page">
+    <header>
+      <img src="icons/icon-48.png" alt="" width="36" height="36">
+      <div>
+        <h1>Chat to PDF</h1>
+        <div class="muted" id="subtitle">Preparing your export…</div>
+      </div>
+    </header>
+
+    <div id="fatal" class="note bad hidden" role="alert"></div>
+
+    <div id="main" class="hidden">
+      <section class="panel stack" aria-labelledby="h-doc">
+        <h2 id="h-doc">Document</h2>
+        <div class="grid">
+          <label class="field">Title<input type="text" id="title" maxlength="200"></label>
+          <label class="field">Page size
+            <select id="page-size"><option value="letter">US Letter</option><option value="a4">A4</option></select></label>
+        </div>
+        <label class="check"><input type="checkbox" id="toc"><span>Include a table of contents</span></label>
+      </section>
+
+      <section class="panel stack" aria-labelledby="h-msg">
+        <div class="row" style="justify-content:space-between">
+          <h2 id="h-msg">Messages <span class="chip" id="sel-count"></span></h2>
+          <div class="toolbar" role="group" aria-label="Select messages">
+            <button class="btn secondary" type="button" id="sel-all">All</button>
+            <button class="btn secondary" type="button" id="sel-none">None</button>
+            <button class="btn secondary" type="button" id="sel-user">Mine only</button>
+            <button class="btn secondary" type="button" id="sel-asst">Replies only</button>
+          </div>
+        </div>
+        <ul class="messages" id="list"></ul>
+      </section>
+
+      <section class="panel stack" aria-labelledby="h-lic">
+        <h2 id="h-lic">Edition</h2>
+        <div id="lic-free" class="stack hidden">
+          <div class="note warn" id="free-note"></div>
+          <div class="row">
+            <button class="btn secondary" type="button" id="unlock">Remove watermark…</button>
+            <button class="btn link" type="button" id="have-code">I already unlocked</button>
+          </div>
+          <form id="code-form" class="row hidden">
+            <label class="field" style="flex:1">Unlock code (checkout session id from the unlock page)
+              <input type="text" id="code" autocomplete="off" spellcheck="false" placeholder="cs_…"></label>
+            <button class="btn" type="submit">Activate</button>
+          </form>
+        </div>
+        <div id="lic-paid" class="note ok hidden">Clean PDFs unlocked: no watermark, no message limit.</div>
+        <div id="lic-msg" class="note hidden" role="status"></div>
+      </section>
+
+      <div class="sticky row">
+        <button class="btn" type="button" id="make">Create PDF</button>
+        <span id="status" class="muted" role="status"></span>
+      </div>
+      <div id="warnings" class="note warn hidden" role="status"></div>
+      <p class="muted" style="font-size:12px;margin-top:12px">Processed entirely in this browser tab. Nothing was uploaded; the captured text is deleted from extension storage after an hour.</p>
+    </div>
+  </div>
+  <script src="studio.js"></script>
+</body>
+</html>

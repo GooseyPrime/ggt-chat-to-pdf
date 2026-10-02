@@ -1,0 +1,28 @@
+<!doctype html>
+<!-- Synthetic fixture modelled on the copilot.microsoft.com chat DOM (data-content attributes and
+     group/* classes). Invented content; real DOM could not be inspected (login required). -->
+<html lang="en">
+<head><title>Spreadsheet formulas | Microsoft Copilot</title></head>
+<body>
+<nav><div role="listbox"><div role="option" aria-selected="true"><p>Spreadsheet formulas</p></div></div></nav>
+<main>
+<div data-testid="message-list">
+  <div class="group/user-message flex justify-end"><div data-content="user-message"><div>How do I sum a column but skip blanks?</div></div></div>
+  <div class="group/ai-message">
+    <div class="group/ai-message-item"><p>Use <code>SUMIF</code>. For example:</p></div>
+    <div class="group/ai-message-item">
+      <div class="rounded-lg"><div class="flex"><span>excel</span><button>Copy</button></div><div><div><pre><code>=SUMIF(A:A, "&lt;&gt;")
+=SUM(A2:A100)</code></pre></div></div></div>
+    </div>
+    <div class="group/ai-message-item">
+      <ol><li>Select the cell</li><li>Type the formula</li></ol>
+      <p>Compare <a href="https://support.microsoft.com/excel">Microsoft's docs</a> and <del>old advice</del>.</p>
+      <table><tr><th>Function</th><th>Ignores blanks</th></tr><tr><td>SUM</td><td>Yes</td></tr><tr><td>AVERAGE</td><td>Yes</td></tr></table>
+    </div>
+    <div data-testid="message-item-reactions"><button aria-label="Like">Like</button><button>Dislike</button></div>
+  </div>
+  <div class="group/user-message"><div data-content="user-message"><div>Thanks!</div></div></div>
+</div>
+</main>
+</body>
+</html>

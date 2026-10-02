@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Chat to PDF",
+  "short_name": "Chat to PDF",
+  "version": "0.0.0",
+  "description": "Turn ChatGPT, Gemini, Copilot and Claude conversations into nicely formatted PDFs in one or two clicks. Everything is processed locally in your browser.",
+  "icons": { "16": "icons/icon-16.png", "32": "icons/icon-32.png", "48": "icons/icon-48.png", "128": "icons/icon-128.png" },
+  "action": {
+    "default_title": "Chat to PDF — export this conversation",
+    "default_popup": "popup.html",
+    "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png" }
+  },
+  "permissions": ["activeTab", "alarms", "scripting", "storage"],
+  "host_permissions": ["__SHOP_MATCH__"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    { "matches": ["__TOOL_MATCH__"], "js": ["bridge.js"], "run_at": "document_idle" }
+  ],
+  "minimum_chrome_version": "102"
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- Synthetic fixture modelled on the Gemini web app's Angular custom elements; invented content. -->
+<html lang="en">
+<head><title>Google Gemini</title></head>
+<body>
+<bard-sidenav>
+  <conversations-list><div data-test-id="conversation" class="conversation selected"><div class="conversation-title">Planning a trip to Lisbon</div></div></conversations-list>
+</bard-sidenav>
+<button data-test-id="bard-mode-menu-button"><span class="current-mode-title">2.5 Pro</span></button>
+<div data-test-id="chat-history-container" class="chat-history">
+  <infinite-scroller>
+    <div class="conversation-container">
+      <user-query>
+        <div class="query-text"><span class="cdk-visually-hidden">You said</span><p class="query-text-line">Plan three days in Lisbon.</p><p class="query-text-line">Budget is moderate.</p></div>
+      </user-query>
+      <model-response>
+        <model-thoughts><div class="thoughts-container">Thinking about neighbourhoods... (must be excluded)</div></model-thoughts>
+        <message-content>
+          <div class="markdown markdown-main-panel">
+            <h3 data-path-to-node="1">Day 1: Alfama</h3>
+            <p data-path-to-node="2">Start with <b>Castelo de S. Jorge</b>, then wander down. Tickets: <a href="https://www.visitlisboa.com/">Visit Lisboa</a>.</p>
+            <ul><li>Morning: castle</li><li>Lunch: <i>petiscos</i></li></ul>
+            <code-block><div class="code-block-decoration"><span>Python</span><button class="copy-button"><mat-icon>content_copy</mat-icon>Copy code</button></div><div class="formatted-code-block-internal-container"><pre><code class="code-container formatted" role="text">budget = {"hotel": 90, "food": 45}
+print(sum(budget.values()))</code></pre></div></code-block>
+            <table-block><div class="table-block"><table><thead><tr><th>Day</th><th>Cost (EUR)</th></tr></thead><tbody><tr><td>1</td><td>120</td></tr><tr><td>2</td><td>95</td></tr></tbody></table></div></table-block>
+            <p>Per-day average <span class="math-inline" data-math="\frac{120+95}{2}">avg</span>:</p>
+            <div class="math-block" data-math="\sum_{i=1}^{n} x_i">sum</div>
+          </div>
+        </message-content>
+        <div class="response-footer"><button>Share</button></div>
+      </model-response>
+    </div>
+  </infinite-scroller>
+</div>
+</body>
+</html>

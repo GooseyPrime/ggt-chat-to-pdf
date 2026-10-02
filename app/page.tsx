@@ -1,5 +1,5 @@
-import { ChatToPdfApp } from "@/components/ChatToPdfApp";
+import { Landing } from "@/components/Landing";
 
 export default function HomePage() {
-  return <ChatToPdfApp />;
+  return <Landing />;
 }
