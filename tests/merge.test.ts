@@ -194,6 +194,79 @@ describe("mergeSnapshot (virtualised / lazy-loaded lists)", () => {
     expect(keys(mergeSnapshot(acc, [m("e"), m("f")], "after"))).toEqual(["c", "d", "e", "f"]);
   });
 
+  it("fills the gap between an initial tail and a disjoint top without duplicating the middle", () => {
+    let acc = mergeSnapshot([], [m("E"), m("F")]);
+    acc = mergeSnapshot(acc, [m("A"), m("B")], "before");
+    acc = mergeSnapshot(acc, [m("B"), m("C"), m("D")], "after");
+    expect(texts(acc)).toEqual(["A", "B", "C", "D", "E", "F"]);
+    acc = mergeSnapshot(acc, [m("D"), m("E"), m("F")], "after");
+    expect(texts(acc)).toEqual(["A", "B", "C", "D", "E", "F"]);
+    expect(new Set(keys(acc)).size).toBe(6);
+  });
+
+  it("keeps repeated fallback messages on both sides of a gap while stitching it", () => {
+    let acc = mergeSnapshot([], [m("E"), m("ok")]);
+    acc = mergeSnapshot(acc, [m("A"), m("ok")], "before");
+    acc = mergeSnapshot(acc, [m("ok"), m("C"), m("D")], "after");
+    acc = mergeSnapshot(acc, [m("D"), m("E"), m("ok")], "after");
+    expect(texts(acc)).toEqual(["A", "ok", "C", "D", "E", "ok"]);
+    expect(new Set(keys(acc)).size).toBe(6);
+    expect(texts(mergeSnapshot(acc, [m("D"), m("E"), m("ok")], "after"))).toEqual(texts(acc));
+  });
+
+  it("does not overwrite a newly observed edit with an older segment while joining a gap", () => {
+    const doc = page('<p data-role="user" data-id="E">old E</p><p data-role="user" data-id="F">F</p>');
+    let acc = mergeSnapshot([], snapshotMessages(site, doc));
+    doc.body.innerHTML = '<p data-role="user" data-id="A">A</p><p data-role="user" data-id="B">B</p>';
+    acc = mergeSnapshot(acc, snapshotMessages(site, doc), "before");
+    doc.body.innerHTML = ["B", "C", "D", "E"].map((id) => `<p data-role="user" data-id="${id}">${id === "E" ? "new E" : id}</p>`).join("");
+    acc = mergeSnapshot(acc, snapshotMessages(site, doc), "after");
+    expect(texts(acc)).toEqual(["A", "B", "C", "D", "new E", "F"]);
+  });
+
+  it("does not stitch a later repeated-text suffix backwards over an earlier segment", () => {
+    const doc = page(["A", "A", "B", "B", "B", "B", "A", "A"].map((text) => `<p data-role="user">${text}</p>`).join(""));
+    const messages = snapshotMessages(site, doc);
+    let acc = mergeSnapshot([], messages.slice(3, 5));
+    acc = mergeSnapshot(acc, messages.slice(0, 2), "before");
+    acc = mergeSnapshot(acc, messages.slice(2, 6), "after");
+    acc = mergeSnapshot(acc, messages.slice(4, 8), "after");
+    expect(texts(acc)).toEqual(["A", "A", "B", "B", "B", "B", "A", "A"]);
+    expect(new Set(keys(acc)).size).toBe(8);
+  });
+
+  it("does not join a forward repeated-text overlap between distinct live nodes", () => {
+    const doc = page(["A", "B", "C", "B", "D"].map((text) => `<p data-role="user">${text}</p>`).join(""));
+    const messages = snapshotMessages(site, doc);
+    let acc = mergeSnapshot([], messages.slice(3, 5));
+    acc = mergeSnapshot(acc, messages.slice(0, 1), "before");
+    acc = mergeSnapshot(acc, messages.slice(0, 2), "after");
+    acc = mergeSnapshot(acc, messages.slice(1, 4), "after");
+    acc = mergeSnapshot(acc, messages.slice(3, 5), "after");
+    expect(texts(acc)).toEqual(["A", "B", "C", "B", "D"]);
+    expect(new Set(keys(acc)).size).toBe(5);
+  });
+
+  it("harvests from a disjoint no-ID bottom window through the missing middle in order", async () => {
+    const doc = page('<p data-role="user">E</p><p data-role="user">F</p>');
+    const scroller = doc.documentElement;
+    let top = 400;
+    Object.defineProperties(scroller, {
+      scrollHeight: { value: 600 },
+      clientHeight: { value: 200 },
+      scrollTop: { get: () => top, set: (value: number) => { top = Math.min(400, Math.max(0, value)); } },
+    });
+    const conversation = await harvestConversation(site, doc, {
+      sleep: async () => {
+        const window = top < 200 ? ["A", "B"] : top < 400 ? ["B", "C", "D"] : ["D", "E", "F"];
+        doc.body.innerHTML = window.map((text) => `<p data-role="user">${text}</p>`).join("");
+      },
+    });
+    expect(texts(conversation.messages)).toEqual(["A", "B", "C", "D", "E", "F"]);
+    expect(new Set(keys(conversation.messages)).size).toBe(6);
+    expect(top).toBe(400);
+  });
+
   it("harvests a final streamed answer without exporting identity metadata", async () => {
     const doc = page('<p data-role="assistant">Hel</p>');
     const conversation = await harvestConversation(site, doc, {
