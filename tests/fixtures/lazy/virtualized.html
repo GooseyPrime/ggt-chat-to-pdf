@@ -1,0 +1,46 @@
+<!doctype html>
+<!-- Synthetic ChatGPT-like page with a VIRTUALISED, LAZY-LOADED transcript (80 messages, ~30 in the DOM at a
+     time; older/newer rows are swapped in as you scroll). Used by scripts/e2e.mjs to prove the harvester
+     scrolls, de-duplicates and keeps order. -->
+<html lang="en"><head><title>Long virtualised chat</title>
+<style>html,body{margin:0;height:100%}#scroller{height:100vh;overflow:auto}.row{height:120px;box-sizing:border-box;border-bottom:1px solid #ddd;padding:8px}</style></head>
+<body><div id="scroller" class="threadScrollVars"><div id="spacer-top"></div><div id="rows"></div><div id="spacer-bottom"></div></div>
+<script>
+(function () {
+  var TOTAL = 80, WIN = 30, STEP = 10, H = 120;
+  var start = TOTAL - WIN, sc = document.getElementById("scroller"), rows = document.getElementById("rows");
+  var top = document.getElementById("spacer-top"), bot = document.getElementById("spacer-bottom");
+  function row(i) {
+    var role = i % 2 === 0 ? "user" : "assistant";
+    var s = document.createElement("section");
+    s.className = "row";
+    s.setAttribute("data-testid", "conversation-turn-" + i);
+    s.setAttribute("data-turn", role);
+    var inner = role === "user"
+      ? '<div data-message-author-role="user"><div class="whitespace-pre-wrap">Question number ' + i + '</div></div>'
+      : '<div data-message-author-role="assistant" data-message-model-slug="gpt-4o"><div class="markdown"><p>Answer number ' + i + ' with <strong>bold</strong> text.</p></div></div>';
+    s.innerHTML = inner;
+    return s;
+  }
+  function render(keepScroll) {
+    rows.textContent = "";
+    for (var i = start; i < start + WIN; i++) rows.appendChild(row(i));
+    top.style.height = start * H + "px";
+    bot.style.height = (TOTAL - start - WIN) * H + "px";
+    if (keepScroll !== undefined) sc.scrollTop = keepScroll;
+  }
+  var busy = false;
+  sc.addEventListener("scroll", function () {
+    if (busy) return;
+    if (sc.scrollTop < 150 && start > 0) {
+      busy = true;
+      setTimeout(function () { start = Math.max(0, start - STEP); render(sc.scrollTop); busy = false; }, 120);
+    } else if (sc.scrollTop + sc.clientHeight > sc.scrollHeight - 150 && start + WIN < TOTAL) {
+      busy = true;
+      setTimeout(function () { start = Math.min(TOTAL - WIN, start + STEP); render(sc.scrollTop); busy = false; }, 120);
+    }
+  });
+  render();
+  sc.scrollTop = sc.scrollHeight;
+})();
+</script></body></html>
