@@ -1,0 +1,12 @@
+Chat to PDF — privacy
+
+* Everything happens inside your browser. Conversation text is read from the page you click the
+  toolbar button on, laid out into a PDF locally, and handed to you as a download.
+* Nothing from your conversations is sent to Golden Goose Tools or anyone else. The extension
+  has no analytics, no telemetry and no remote code.
+* Temporary captures are kept in the extension's local storage for up to one hour (so the export
+  window can open) and are then deleted.
+* The only network request the extension makes is to goldengoosetools.com to confirm an unlock
+  code you entered (the Stripe checkout session id) is a paid Chat to PDF purchase.
+* Permissions: activeTab + scripting (read the chat page only when you click the button),
+  storage (temporary capture + unlock record), host access to goldengoosetools.com (unlock check).
