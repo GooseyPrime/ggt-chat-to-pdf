@@ -48,7 +48,7 @@ describe("extension build", () => {
   it("chromium manifest is MV3 with minimal permissions and no always-on access to chat sites", () => {
     const m = JSON.parse(read("chromium", "manifest.json"));
     expect(m.manifest_version).toBe(3);
-    expect(m.permissions.sort()).toEqual(["activeTab", "scripting", "storage"]);
+    expect(m.permissions.sort()).toEqual(["activeTab", "alarms", "scripting", "storage"]);
     expect(m.host_permissions).toEqual(["https://www.goldengoosetools.com/*"]);
     expect(m.content_scripts).toHaveLength(1);
     expect(m.content_scripts[0].matches).toEqual(["https://www.goldengoosetools.com/tools/chat-to-pdf*"]);

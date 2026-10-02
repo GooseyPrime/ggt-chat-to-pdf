@@ -87,9 +87,8 @@ export const gemini: Site = {
   parse(raw): Block[] {
     if (raw.role === "user") {
       const lines = allMatches(raw.el, [".query-text-line"]);
-      const body = queryAny(raw.el, SELECTORS.userText) ?? raw.el;
-      void lines;
-      return parseBlocks(body, hooks);
+      const body = queryAny(raw.el, SELECTORS.userText.filter((s) => s !== ".query-text-line"));
+      return (body ? [body] : lines.length ? lines : [raw.el]).flatMap((el) => parseBlocks(el, hooks));
     }
     const bodies = outermost(allMatches(raw.el, SELECTORS.assistantBody));
     return (bodies.length ? bodies : [raw.el]).flatMap((b) => parseBlocks(b, hooks));

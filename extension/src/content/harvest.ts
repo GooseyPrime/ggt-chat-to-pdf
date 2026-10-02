@@ -1,8 +1,7 @@
-import type { Conversation, Message } from "../model";
-import { SITE_NAMES } from "../model";
+import { blocksText, SITE_NAMES, type Conversation, type Message } from "../model";
 import { stableKey } from "../parsers/common";
 import type { Site } from "../parsers/site";
-import { mergeSnapshot } from "./merge";
+import { mergeSnapshot, rememberSnapshotIdentity } from "./merge";
 
 export interface Progress {
   phase: "idle" | "loading-history" | "reading" | "done" | "error";
@@ -30,13 +29,13 @@ export function snapshotMessages(site: Site, doc: Document): Message[] {
     } catch {
       continue; // one unparsable message must not abort the export
     }
-    const text = (raw.el.textContent ?? "").replace(/\s+/g, " ").trim();
-    out.push({
+    const text = blocksText(blocks).replace(/\s+/g, " ").trim();
+    out.push(rememberSnapshotIdentity({
       key: raw.key ?? stableKey(raw.role, text),
       role: raw.role,
       blocks,
       model: raw.model,
-    });
+    }, raw.el, text, raw.key !== undefined));
   }
   return out;
 }
@@ -103,7 +102,7 @@ export async function harvestConversation(site: Site, doc: Document, opts: Harve
       scroller.scrollTop = 0;
       await sleep(250);
       for (let i = 0; i < 2000 && !cancelled(); i++) {
-        acc = mergeSnapshot(acc, snapshotMessages(site, doc));
+        acc = mergeSnapshot(acc, snapshotMessages(site, doc), "after");
         report({ phase: "reading", messages: acc.length });
         const atEnd = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 4;
         if (atEnd) break;
@@ -112,7 +111,7 @@ export async function harvestConversation(site: Site, doc: Document, opts: Harve
         await sleep(220);
         if (scroller.scrollTop === before) break;
       }
-      acc = mergeSnapshot(acc, snapshotMessages(site, doc));
+      acc = mergeSnapshot(acc, snapshotMessages(site, doc), "after");
     } finally {
       scroller.scrollTop = original;
     }

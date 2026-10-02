@@ -38,7 +38,7 @@ This repo contains
   the shop's `/tools/chat-to-pdf` page); the extension **re-verifies with the shop itself**, caches the result
   (re-check every 24 h, 14-day offline grace). Fallback: paste the code into *I already unlocked* in the
   studio window.
-* **No price is hard-coded anywhere** (a test enforces it for `extension/`). The page shows a price label only
+* **No price is hard-coded in the extension** (a test enforces it for `extension/`). The page shows a price label only
   from `NEXT_PUBLIC_PRICE_CENTS`, which mirrors the shop config. No Stripe secrets or SDK in this repo.
 
 ## Develop

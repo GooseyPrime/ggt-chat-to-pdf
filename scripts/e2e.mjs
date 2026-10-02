@@ -73,6 +73,9 @@ try {
     await studio.waitForSelector("#sel-count");
     const countText = await studio.textContent("#sel-count");
     ok(`${c.id}: studio captured ${c.messages} messages`, countText.includes(`of ${c.messages} selected`), countText);
+    const captureKey = new URL(studio.url()).searchParams.get("c");
+    const stored = await sw.evaluate(async (key) => (await chrome.storage.local.get(key))[key], captureKey);
+    ok(`${c.id}: consumed capture removed from storage`, stored === undefined);
     await studio.screenshot({ path: path.join(outDir, `studio-${c.id}.png`), fullPage: false });
     if (c.id === "chatgpt-virtualised") {
       const prev = await studio.$$eval("#list .prev", (els) => els.map((e) => e.textContent));
@@ -90,7 +93,7 @@ try {
       await studio.click("#have-code");
       await studio.fill("#code", "cs_test_other_product");
       await studio.click("#code-form button[type=submit]");
-      await studio.waitForSelector("#lic-msg:not(.hidden)");
+      await studio.waitForSelector("#lic-msg.bad:not(.hidden)");
       ok("unlock: a session paid for another product is rejected", (await studio.textContent("#lic-msg")).includes("wasn't recognised"));
       await studio.fill("#code", "cs_test_paid_session");
       await studio.click("#code-form button[type=submit]");

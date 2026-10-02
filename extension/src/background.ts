@@ -4,18 +4,37 @@ import { activate, browserStore, hasLicense } from "./license";
 
 const store = browserStore(ext.storage.local);
 const doFetch = (u: string, i?: RequestInit) => fetch(u, i) as ReturnType<typeof fetch>;
+const CAPTURE_TTL_MS = 60 * 60 * 1000;
 
 async function purgeOldCaptures(): Promise<void> {
   const all = await ext.storage.local.get(null);
-  const cutoff = Date.now() - 60 * 60 * 1000;
-  const stale = Object.entries(all)
-    .filter(([k, v]) => k.startsWith("capture:") && ((v as { savedAt?: number })?.savedAt ?? 0) < cutoff)
-    .map(([k]) => k);
+  const stale: string[] = [];
+  for (const [key, value] of Object.entries(all)) {
+    if (!key.startsWith("capture:")) continue;
+    const expiresAt = ((value as { savedAt?: number })?.savedAt ?? 0) + CAPTURE_TTL_MS;
+    if (expiresAt <= Date.now()) stale.push(key);
+    else await ext.alarms.create(key, { when: expiresAt });
+  }
   if (stale.length) await ext.storage.local.remove(stale);
 }
 
 ext.runtime.onInstalled.addListener(() => void purgeOldCaptures());
 ext.runtime.onStartup.addListener(() => void purgeOldCaptures());
+ext.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local") return;
+  for (const [key, change] of Object.entries(changes)) {
+    if (!key.startsWith("capture:")) continue;
+    if (change.newValue) {
+      const savedAt = (change.newValue as { savedAt?: number }).savedAt ?? 0;
+      void ext.alarms.create(key, { when: savedAt + CAPTURE_TTL_MS });
+    } else {
+      void ext.alarms.clear(key);
+    }
+  }
+});
+ext.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name.startsWith("capture:")) void purgeOldCaptures();
+});
 
 /** The bridge content script only runs on the shop's tool page; double-check the sender anyway. */
 function trustedSender(sender: chrome.runtime.MessageSender): boolean {

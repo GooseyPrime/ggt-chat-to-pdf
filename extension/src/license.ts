@@ -36,8 +36,9 @@ export async function verifySession(sessionId: string, doFetch: Fetch, origin = 
   try {
     const url = `${origin}/api/verify?session_id=${encodeURIComponent(sessionId)}`;
     const res = await doFetch(url, { method: "GET", headers: { Accept: "application/json" } });
+    if (!res.ok) return "offline";
     const data = await res.json().catch(() => null);
-    if (data === null && !res.ok) return "offline";
+    if (data === null) return "offline";
     return isPaidSession(data) ? "paid" : "unpaid";
   } catch {
     return "offline";

@@ -147,8 +147,9 @@ async function init() {
   const key = q.get("c") ?? "";
   if (!key.startsWith("capture:")) return fatal("Nothing to export. Open a chat and use the toolbar button.");
   const got = await ext.storage.local.get(key);
-  const rec = got[key] as { conversation?: Conversation } | undefined;
-  if (!rec?.conversation) return fatal("This capture has expired (they're kept for one hour). Go back to the chat and click the toolbar button again.");
+  const rec = got[key] as { savedAt?: number; conversation?: Conversation } | undefined;
+  await ext.storage.local.remove(key);
+  if (!rec?.conversation || typeof rec.savedAt !== "number" || Date.now() - rec.savedAt >= 60 * 60 * 1000) return fatal("This capture has expired (they're kept for one hour). Go back to the chat and click the toolbar button again.");
   conv = rec.conversation;
   selected = conv.messages.map(() => true);
   $("subtitle").textContent = `${conv.siteName}${conv.model ? ` · ${conv.model}` : ""} · ${conv.messages.length} messages captured`;

@@ -92,6 +92,7 @@ describe("Claude parser", () => {
     const [user, asst] = readAll(claude);
     expect(JSON.stringify(user.blocks)).toContain('"code":true');
     expect(JSON.stringify(user.blocks)).toContain('"br"');
+    expect(blocksText(user.blocks)).toContain("screenshot.png");
     const code = find(asst.blocks, "code")[0];
     expect(code.lang).toBe("typescript");
     expect(code.text).toContain("cache ??= JSON.parse");
@@ -134,6 +135,10 @@ describe("Gemini parser", () => {
     document.close();
     expect(gemini.collect(document)).toEqual([]);
     expect(gemini.title(document)).toBe("Taxes");
+  });
+  it("keeps every user query line when the text wrapper is absent", () => {
+    document.body.innerHTML = '<user-query><div class="query-text-line">First line</div><div class="query-text-line">Second line</div></user-query>';
+    expect(blocksText(readAll(gemini)[0].blocks)).toBe("First line\nSecond line");
   });
 });
 

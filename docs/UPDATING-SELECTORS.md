@@ -16,8 +16,8 @@ Every site file in `extension/src/parsers/` has the same shape:
 * `title(doc)`, `model(doc)`, `scroller(doc)` — metadata and the scrolling element for lazy loading;
 * `format` — the PDF look for that site (accent colour, user-card tint, labels).
 
-`common.ts` never relies on class names: unknown wrappers fall back to “container, keep the text”, so a renamed
-class degrades *formatting* before it loses *content*. Roles come from attributes where possible
+`common.ts` has a generic text fallback for unknown wrappers. Class-based selectors still handle hidden UI,
+code, math and other formatting, so selector changes can affect those paths. Roles come from attributes where possible
 (`data-turn`, `data-message-author-role`, `data-testid`, custom-element names).
 
 ## Procedure

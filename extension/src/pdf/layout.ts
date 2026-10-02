@@ -489,33 +489,41 @@ export class Layout {
     }
     const colW = widths.map((wd) => wd + pad * 2);
     const x0 = g.x;
+    const lineH = size * 1.35;
+    const rowPad = pad * 1.6;
+    const pageBottom = this.g.h - this.g.bottom;
+    const pageH = pageBottom - this.g.top;
 
     const rowLayout = (r: (typeof b.rows)[number]) => {
       const s: TextStyle = r.header ? { ...cst, bold: true } : cst;
       const cells = r.cells.map((cell, c) => ({ lines: this.wrap(cell, widths[c], s), s }));
-      const h = Math.max(...cells.map((c) => c.lines.length)) * size * 1.35 + pad * 1.6;
-      return { cells, h };
+      const lines = Math.max(...cells.map((c) => c.lines.length));
+      return { cells, lines, h: lines * lineH + rowPad };
     };
-    const drawRow = (r: (typeof b.rows)[number], layout: ReturnType<typeof rowLayout>) => {
+    const drawRow = (r: (typeof b.rows)[number], layout: ReturnType<typeof rowLayout>, start = 0, count = layout.lines) => {
       const top = this.y;
+      const h = count * lineH + rowPad;
       let cx = x0;
       layout.cells.forEach((cell, c) => {
-        if (r.header) this.page.bg.push({ z: 40, op: { k: "rect", x: cx, y: top, w: colW[c], h: layout.h, fill: [238, 241, 245] } });
-        cell.lines.forEach((ln, li) => {
+        if (r.header) this.page.bg.push({ z: 40, op: { k: "rect", x: cx, y: top, w: colW[c], h, fill: [238, 241, 245] } });
+        cell.lines.slice(start, start + count).forEach((ln, li) => {
           const a = b.align[c];
           const lx = a === "right" ? cx + colW[c] - pad - ln.width : a === "center" ? cx + (colW[c] - ln.width) / 2 : cx + pad;
-          this.drawLine(ln, lx, top + pad * 0.8 + li * size * 1.35, size * 1.35, { ...cell.s, align: "left" });
+          this.drawLine(ln, lx, top + pad * 0.8 + li * lineH, lineH, { ...cell.s, align: "left" });
         });
         cx += colW[c];
       });
       // grid
-      this.page.fg.push({ k: "line", x1: x0, y1: top + layout.h, x2: x0 + colW.reduce((a, c) => a + c, 0), y2: top + layout.h, color: COLORS.rule, lw: 0.6 });
-      this.y += layout.h;
+      this.page.fg.push({ k: "line", x1: x0, y1: top + h, x2: x0 + colW.reduce((a, c) => a + c, 0), y2: top + h, color: COLORS.rule, lw: 0.6 });
+      this.y += h;
     };
 
-    const headerRows = b.rows.filter((r) => r.header).slice(0, 1);
+    const headers = b.rows.filter((r) => r.header).map((r) => ({ row: r, layout: rowLayout(r) }));
+    const headerH = headers.reduce((h, header) => h + header.layout.h, 0);
+    // Oversized headers are themselves split, not repeated: leave room for at least one body line.
+    const repeatHeaders = headerH + lineH + rowPad <= pageH;
     const firstLayout = rowLayout(b.rows[0]);
-    this.need(firstLayout.h + 20);
+    this.need(Math.min(Math.max(firstLayout.h + 20, headerH + lineH + rowPad), pageH));
     const tableTop = this.y;
     let segTop = tableTop;
     const frame = () => {
@@ -527,15 +535,30 @@ export class Layout {
         cx += colW[c] ?? 0;
       }
     };
+    const nextPage = (r: (typeof b.rows)[number]) => {
+      frame();
+      this.newPage();
+      segTop = this.y;
+      if (repeatHeaders && !r.header) {
+        for (const header of headers) drawRow(header.row, header.layout);
+      }
+    };
     b.rows.forEach((r, idx) => {
       const lay = idx === 0 ? firstLayout : rowLayout(r);
-      if (this.y + lay.h > this.g.h - this.g.bottom && idx > 0) {
-        frame();
-        this.newPage();
-        segTop = this.y;
-        for (const hr of headerRows) if (hr !== r) drawRow(hr, rowLayout(hr));
+      const repeatedH = repeatHeaders && !r.header ? headerH : 0;
+      if (this.y + lay.h > pageBottom && lay.h <= pageH - repeatedH) nextPage(r);
+      let start = 0;
+      while (start < lay.lines) {
+        const room = Math.floor((pageBottom - this.y - rowPad) / lineH);
+        if (room < 1) {
+          nextPage(r);
+          continue;
+        }
+        const count = Math.min(lay.lines - start, room);
+        drawRow(r, lay, start, count);
+        start += count;
+        if (start < lay.lines) nextPage(r);
       }
-      drawRow(r, lay);
     });
     frame();
   }

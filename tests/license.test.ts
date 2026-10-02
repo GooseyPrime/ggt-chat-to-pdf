@@ -46,6 +46,11 @@ describe("verifySession", () => {
     expect(await verifySession("cs_test_abc123", reply({ ok: true, paid: false, product: "chat-to-pdf" }))).toBe("unpaid");
     expect(await verifySession("cs_test_abc123", async () => ({ ok: false, json: async () => { throw new Error("bad"); } }))).toBe("offline");
   });
+  it("does not interpret unsuccessful HTTP responses as payment decisions", async () => {
+    expect(await verifySession("cs_test_abc123", reply({ ok: false, error: "unavailable" }, false))).toBe("offline");
+    expect(await verifySession("cs_test_abc123", reply(PAID, false))).toBe("offline");
+    expect(await verifySession("cs_test_abc123", async () => ({ ok: true, json: async () => { throw new Error("bad"); } }))).toBe("offline");
+  });
 });
 
 describe("activate / hasLicense", () => {
@@ -77,6 +82,16 @@ describe("activate / hasLicense", () => {
     const s = memStore({ [LICENSE_KEY]: { sessionId: "cs_test_abc123", verifiedAt: 0 } });
     expect(await hasLicense(s, offline, REVERIFY_MS * 3)).toBe(true);
     expect(await hasLicense(s, offline, OFFLINE_GRACE_MS + 1)).toBe(false);
+  });
+  it("preserves the license record on JSON server errors without extending grace", async () => {
+    const rec = { sessionId: "cs_test_abc123", verifiedAt: 0 };
+    const s = memStore({ [LICENSE_KEY]: rec });
+    const serverError = reply({ ok: false, error: "unavailable" }, false);
+    expect(await hasLicense(s, serverError, REVERIFY_MS * 3)).toBe(true);
+    expect(s.data[LICENSE_KEY]).toEqual(rec);
+    expect(await hasLicense(s, serverError, OFFLINE_GRACE_MS)).toBe(false);
+    expect(s.data[LICENSE_KEY]).toEqual(rec);
+    expect(await activate(rec.sessionId, memStore(), serverError)).toEqual({ ok: false, offline: true });
   });
   it("no record, no licence", async () => {
     expect(await hasLicense(memStore(), reply(PAID))).toBe(false);

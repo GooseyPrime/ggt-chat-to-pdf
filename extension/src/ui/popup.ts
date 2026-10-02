@@ -81,7 +81,13 @@ async function start(pick: boolean) {
   show("working");
   $("error").classList.add("hidden");
   const loadAll = ($("load-all") as HTMLInputElement).checked;
-  await send({ type: "ggt-harvest", loadAll });
+  try {
+    await send({ type: "ggt-harvest", loadAll });
+  } catch {
+    fail("Lost contact with the page (did it navigate?). Reload and try again.");
+    show("supported");
+    return;
+  }
   poll = window.setInterval(async () => {
     try {
       const st = await send<Status>({ type: "ggt-status" });
@@ -106,6 +112,7 @@ async function start(pick: boolean) {
     } catch {
       window.clearInterval(poll);
       fail("Lost contact with the page (did it navigate?). Reload and try again.");
+      show("supported");
     }
   }, 350);
 }

@@ -59,7 +59,12 @@ export const claude: Site = {
   },
 
   parse(raw): Block[] {
-    if (raw.role === "user") return parseBlocks(queryAny(raw.el, SELECTORS.user) ?? raw.el, hooks);
+    if (raw.role === "user") {
+      const blocks = parseBlocks(queryAny(raw.el, SELECTORS.user) ?? raw.el, hooks);
+      const row = raw.el.closest('[class~="group/message-row"]');
+      const attachments = row ? allMatches(row, ['[data-testid="file-thumbnail"]']).filter((el) => !raw.el.contains(el)) : [];
+      return [...blocks, ...attachments.flatMap((el) => parseBlocks(el, hooks))];
+    }
     const bodies = outermost(allMatches(raw.el, SELECTORS.assistantBody));
     const sources = bodies.length ? bodies : [raw.el];
     return sources.flatMap((b) => parseBlocks(b, hooks));
