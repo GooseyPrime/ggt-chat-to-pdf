@@ -24,7 +24,8 @@ describe("startSale", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("sku_not_live");
-      expect(result.message.toLowerCase()).toMatch(/not live|seo|accessibility/);
+      expect(result.message).toContain("free watermarked preview");
+      expect(result.message.toLowerCase()).not.toMatch(/sale desk|allowlist|seo|accessibility/);
     }
   });
 
@@ -39,5 +40,34 @@ describe("startSale", () => {
 
     expect(result.ok).toBe(false);
     expect("checkoutUrl" in result).toBe(false);
+  });
+
+  it("does not expose internal shop errors to customers", async () => {
+    process.env.NEXT_PUBLIC_SHOP_SALE_PRODUCTS = "chat-to-pdf";
+    process.env.NEXT_PUBLIC_SHOP_ORIGIN = "https://goldengoosetools.com";
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () =>
+      new Response(
+        JSON.stringify({
+          ok: false,
+          message: "Refused by internal allowlist: seo-audit",
+        }),
+        { status: 400 },
+      );
+
+    try {
+      const result = await startSale({
+        url: "https://goldengoosetools.com/tools/chat-to-pdf",
+        returnUrl: "https://tool.example/tools/chat-to-pdf",
+      });
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.message).toBe("We couldn't start checkout. Please try again later.");
+        expect(result.message.toLowerCase()).not.toMatch(/allowlist|seo-audit/);
+      }
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 });

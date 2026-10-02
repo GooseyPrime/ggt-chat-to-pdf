@@ -43,7 +43,7 @@ export async function startSale(input: SaleRequest): Promise<SaleResult> {
       ok: false,
       code: "sku_not_live",
       message:
-        "Checkout for Chat to PDF is not live on the shop sale desk yet. The free watermarked preview (first 20 messages) still works. We will not send you through SEO Audit or Accessibility checkout (that would charge the wrong price).",
+        "Checkout for Chat to PDF is not available yet. The free watermarked preview is still available.",
     };
   }
 
@@ -57,7 +57,7 @@ export async function startSale(input: SaleRequest): Promise<SaleResult> {
     return {
       ok: false,
       code: "unconfigured",
-      message: "Shop payments are not configured. Set NEXT_PUBLIC_SHOP_ORIGIN.",
+      message: "Checkout is temporarily unavailable. Please try again later.",
     };
   }
 
@@ -157,9 +157,7 @@ async function postSale(url: string, body: string): Promise<SaleResult> {
         return {
           ok: false,
           code: "shop_error",
-          message:
-            asString(record.message) ??
-            "The shop sale desk refused this checkout. Chat to PDF may not be on the allowlist yet.",
+          message: "We couldn't start checkout. Please try again later.",
         };
       }
 
@@ -173,15 +171,19 @@ async function postSale(url: string, body: string): Promise<SaleResult> {
       return {
         ok: false,
         code: "shop_error",
-        message: asString(record.message) ?? "The shop could not start checkout.",
+        message: "We couldn't start checkout. Please try again later.",
       };
     }
-    return { ok: false, code: "shop_error", message: "The shop could not start checkout." };
+    return {
+      ok: false,
+      code: "shop_error",
+      message: "We couldn't start checkout. Please try again later.",
+    };
   } catch {
     return {
       ok: false,
       code: "shop_error",
-      message: "Could not reach the shop payment desk.",
+      message: "We couldn't reach checkout. Please try again later.",
     };
   }
 }
@@ -194,7 +196,10 @@ function isVerifyShape(value: unknown): value is Record<string, unknown> {
   );
 }
 
-/** Exported for unit tests — unlock when ok&&paid OR paymentStatus no_payment_required. */
+/**
+ * Exported for unit tests — requires ok, payment confirmation (or no payment required),
+ * and a matching product ID.
+ */
 export function normalizeVerify(
   data: Record<string, unknown>,
   sessionId: string,
