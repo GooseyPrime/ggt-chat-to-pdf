@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+    groups:
+      npm_and_yarn:
+        patterns: ["*"]
+    ignore:
+      # Major bumps of the test/build toolchain have broken the Vercel install twice.
+      # They are taken deliberately, together, by hand.
+      - dependency-name: vitest
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitest/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: esbuild
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
