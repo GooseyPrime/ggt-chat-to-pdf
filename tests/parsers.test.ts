@@ -74,6 +74,43 @@ describe("ChatGPT parser", () => {
   });
 });
 
+describe("ChatGPT share-page parser (2026-11 markup)", () => {
+  // Fixture trimmed from the public share
+  // https://chatgpt.com/share/671bde76-16f4-8000-97f3-b92fa5122627
+  // captured 2026-11-12. The live page had 28 messages (14 user + 14 assistant);
+  // the fixture keeps four turns of the current share-page DOM.
+  it("reads roles, title and message ids without the old turn attributes", () => {
+    loadFixture("chatgpt", "share-page.html");
+    expect(document.querySelectorAll("[data-message-author-role]")).toHaveLength(0);
+    expect(document.querySelectorAll('[data-testid^="conversation-turn-"]')).toHaveLength(0);
+    const msgs = readAll(chatgpt);
+    expect(msgs.map((m) => m.role)).toEqual(["user", "assistant", "user", "assistant"]);
+    expect(chatgpt.title(document)).toBe("A Philosophical Dialogue on the Nature of Intelligence");
+    expect(msgs.map((m) => m.key)).toEqual(["share-user-1", "share-asst-1", "share-user-2", "share-asst-2"]);
+    expect(blocksText(msgs[0].blocks)).toBe("What is intelligence, from science and philosophy?");
+    expect(blocksText(msgs[3].blocks)).toBe("Intelligence is the capacity to apprehend, abstract, and discern truth.");
+    expect(chatgpt.scroller(document)?.hasAttribute("data-conversation-history-root")).toBe(true);
+    expectClean(msgs);
+  });
+
+  it("parses assistant markdown from data-assistant-markdown-root and drops share chrome", () => {
+    loadFixture("chatgpt", "share-page.html");
+    const a = readAll(chatgpt)[1].blocks;
+    expect(find(a, "h")[0]).toMatchObject({ level: 3 });
+    const lists = find(a, "list");
+    expect(lists).toHaveLength(1);
+    expect(lists[0].ordered).toBe(false);
+    expect(lists[0].items).toHaveLength(2);
+    const t = blocksText(a);
+    expect(t).toContain("Philosophical Perspective");
+    expect(t).toContain("practical intelligence");
+    expect(t).toContain("Conclusion");
+    expect(t).not.toMatch(/\bCopy\b/);
+    expect(JSON.stringify(a)).toContain('"italic":true');
+    expect(JSON.stringify(a)).toContain('"bold":true');
+  });
+});
+
 describe("Claude parser", () => {
   it("reads roles, title, model, excludes thinking blocks and action buttons", () => {
     loadFixture("claude");
