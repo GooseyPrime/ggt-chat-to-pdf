@@ -5,7 +5,7 @@ import type { Site } from "../../extension/src/parsers/site";
 import { loadFixture, readAll } from "./load";
 
 export const fontLoader = async (file: string): Promise<Uint8Array> =>
-  new Uint8Array(fs.readFileSync(path.join(__dirname, "..", "..", "node_modules", "dejavu-fonts-ttf", "ttf", file)));
+  new Uint8Array(fs.readFileSync(path.join(__dirname, "..", "..", "extension", "assets", "fonts", file)));
 
 export function conversationFrom(site: Site): Conversation {
   loadFixture(site.id);

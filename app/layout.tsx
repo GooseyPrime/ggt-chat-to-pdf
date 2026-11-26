@@ -5,15 +5,26 @@ import { THEME } from "@/lib/config";
 import "./globals.css";
 
 const display = localFont({
-  src: "../node_modules/dejavu-fonts-ttf/ttf/DejaVuSerif.ttf",
+  src: "../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2",
   variable: "--font-display",
+  weight: "100 900",
 });
 const sans = localFont({
-  src: "../node_modules/dejavu-fonts-ttf/ttf/DejaVuSans.ttf",
+  src: "../node_modules/@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2",
   variable: "--font-sans",
+  weight: "400 600",
 });
 const mono = localFont({
-  src: "../node_modules/dejavu-fonts-ttf/ttf/DejaVuSansMono.ttf",
+  src: [
+    {
+      path: "../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2",
+      weight: "400",
+    },
+    {
+      path: "../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2",
+      weight: "500",
+    },
+  ],
   variable: "--font-mono",
 });
 

@@ -15,6 +15,9 @@
     "test:e2e": "node scripts/e2e.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/fraunces": "5.3.0",
+    "@fontsource-variable/ibm-plex-sans": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
     "ggt-design-kit": "github:GooseyPrime/ggt-design-kit#f69b388c00bfa8872a951aa683c51c14f8933ef8",
     "jspdf": "^4.2.1",
     "next": "^16.4.6",
@@ -27,7 +30,6 @@
     "@types/node": "^26.6.6",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
-    "dejavu-fonts-ttf": "^2.37.3",
     "esbuild": "^0.28.2",
     "jsdom": "^31.0.1",
     "playwright-core": "^1.65.1",

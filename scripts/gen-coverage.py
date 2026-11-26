@@ -3,7 +3,7 @@
 import sys
 from fontTools.ttLib import TTFont
 
-path = sys.argv[1] if len(sys.argv) > 1 else "node_modules/dejavu-fonts-ttf/ttf/DejaVuSans.ttf"
+path = sys.argv[1] if len(sys.argv) > 1 else "extension/assets/fonts/DejaVuSans.ttf"
 cmap = TTFont(path).getBestCmap()
 keep = sorted(
     cp for cp in cmap

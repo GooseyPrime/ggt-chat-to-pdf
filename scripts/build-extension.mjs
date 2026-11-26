@@ -24,7 +24,7 @@ const TOOL_URL = process.env.CTP_TOOL_URL || `${SHOP_ORIGIN}/tools/chat-to-pdf`;
 const CHAT_SITES = ["https://chatgpt.com/*", "https://chat.openai.com/*", "https://gemini.google.com/*", "https://copilot.microsoft.com/*", "https://claude.ai/*"];
 
 const FONTS = ["DejaVuSans.ttf", "DejaVuSans-Bold.ttf", "DejaVuSansMono.ttf"];
-const fontDir = path.join(root, "node_modules", "dejavu-fonts-ttf");
+const fontDir = path.join(root, "extension", "assets", "fonts");
 
 const stubOptional = {
   name: "stub-optional-jspdf-deps",
@@ -95,8 +95,8 @@ async function buildTarget(target) {
   await bundle(dir, target);
   for (const f of ["popup.html", "studio.html", "ui.css"]) fs.copyFileSync(path.join(root, "extension/src/ui", f), path.join(dir, f));
   for (const s of [16, 32, 48, 128]) fs.writeFileSync(path.join(dir, "icons", `icon-${s}.png`), iconPng(s));
-  for (const f of FONTS) fs.copyFileSync(path.join(fontDir, "ttf", f), path.join(dir, "fonts", f));
-  fs.copyFileSync(path.join(fontDir, "LICENSE"), path.join(dir, "fonts", "LICENSE-DejaVu.txt"));
+  for (const f of FONTS) fs.copyFileSync(path.join(fontDir, f), path.join(dir, "fonts", f));
+  fs.copyFileSync(path.join(fontDir, "LICENSE-DejaVu.txt"), path.join(dir, "fonts", "LICENSE-DejaVu.txt"));
   fs.writeFileSync(path.join(dir, "manifest.json"), `${JSON.stringify(manifestFor(target), null, 2)}\n`);
   fs.writeFileSync(path.join(dir, "PRIVACY.txt"), fs.readFileSync(path.join(root, "extension", "PRIVACY.txt")));
   const zipName = `chat-to-pdf-${target}-v${pkg.version}.zip`;
