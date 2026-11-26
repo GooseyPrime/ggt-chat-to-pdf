@@ -17,7 +17,7 @@
   "dependencies": {
     "ggt-design-kit": "github:GooseyPrime/ggt-design-kit#f69b388c00bfa8872a951aa683c51c14f8933ef8",
     "jspdf": "^4.2.1",
-    "next": "^15.5.3",
+    "next": "^15.5.29",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
