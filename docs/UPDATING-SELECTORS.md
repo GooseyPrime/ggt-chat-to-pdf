@@ -43,7 +43,7 @@ code, math and other formatting, so selector changes can affect those paths. Rol
 
 | Site | Message elements | Content | Metadata |
 | --- | --- | --- | --- |
-| ChatGPT | `section[data-testid^="conversation-turn-"]` with `data-turn`; fallback `[data-message-author-role]` | assistant `.markdown`; user `.whitespace-pre-wrap` (raw text, fences converted) | model: `data-message-model-slug`; title: `document.title` |
+| ChatGPT | current share / some chats: `li[data-message-role]` in `ol[data-conversation-transcript]`; fallback `section[data-testid^="conversation-turn-"]` with `data-turn`, then `[data-message-author-role]` | assistant `[data-assistant-markdown-root]` then `.markdown`; user `[data-user-message-copy]` then `.whitespace-pre-wrap` (raw text, fences converted) | model: `data-message-model-slug` (absent on some share pages); title: `document.title` |
 | Claude | `[data-testid="user-message"]`, `.font-claude-response` / `[data-testid="assistant-message"]` | `.standard-markdown`; thinking blocks skipped; artifacts → placeholder | model: `[data-testid="model-selector-dropdown"]`; title: `[data-testid="chat-title-button"]` |
 | Gemini | `user-query`, `model-response` custom elements (open shadow roots searched as a fallback) | `.query-text`; `message-content .markdown`; `code-block`; `data-math`; `model-thoughts` skipped | model: `[data-test-id="bard-mode-menu-button"]`; title: selected sidebar conversation |
 | Copilot | `[class~="group/user-message"]`, `[class~="group/ai-message"]` (items: `group/ai-message-item`) | `[data-content="user-message"]`; code wrapper = div with a language header above `pre` | title: selected `[role=option]` |
