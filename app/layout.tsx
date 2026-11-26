@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { THEME } from "@/lib/config";
 import "./globals.css";
 
-const display = Fraunces({ subsets: ["latin"], variable: "--font-display" });
-const sans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const display = localFont({
+  src: "../node_modules/dejavu-fonts-ttf/ttf/DejaVuSerif.ttf",
+  variable: "--font-display",
+});
+const sans = localFont({
+  src: "../node_modules/dejavu-fonts-ttf/ttf/DejaVuSans.ttf",
   variable: "--font-sans",
 });
-const mono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
+const mono = localFont({
+  src: "../node_modules/dejavu-fonts-ttf/ttf/DejaVuSansMono.ttf",
   variable: "--font-mono",
 });
 
